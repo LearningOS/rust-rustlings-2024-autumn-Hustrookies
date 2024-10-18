@@ -27,6 +27,7 @@ mod tests {
     use super::*;
 
     #[test]
+    
     fn correct_width_and_height() {
         // This test should check if the rectangle is the size that we pass into its constructor
         let rect = Rectangle::new(10, 20);
@@ -35,6 +36,7 @@ mod tests {
     }
 
     #[test]
+    #[should_panic(expected = "Rectangle width and height cannot be negative!")]
     fn negative_width() {
         // This test should check if program panics when we try to create rectangle with negative width
         let _rect = Rectangle::new(-10, 10);
@@ -42,6 +44,7 @@ mod tests {
     }
 
     #[test]
+    #[should_panic(expected = "Rectangle width and height cannot be negative!")]
     fn negative_height() {
         // This test should check if program panics when we try to create rectangle with negative height
         let _rect = Rectangle::new(10, -10);
