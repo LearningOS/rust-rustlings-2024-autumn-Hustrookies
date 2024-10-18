@@ -30,6 +30,19 @@ impl Graph for UndirectedGraph {
     }
     fn add_edge(&mut self, edge: (&str, &str, i32)) {
         //TODO
+        let (from_node, to_node, weight) = edge;
+
+        // 添加边到 from_node 的邻接表
+        self.adjacency_table_mutable()
+            .entry(from_node.to_string())
+            .or_insert_with(Vec::new)
+            .push((to_node.to_string(), weight));
+
+        // 添加边到 to_node 的邻接表（无向图）
+        self.adjacency_table_mutable()
+            .entry(to_node.to_string())
+            .or_insert_with(Vec::new)
+            .push((from_node.to_string(), weight));
     }
 }
 pub trait Graph {
@@ -38,11 +51,15 @@ pub trait Graph {
     fn adjacency_table(&self) -> &HashMap<String, Vec<(String, i32)>>;
     fn add_node(&mut self, node: &str) -> bool {
         //TODO
-		true
+		
+        if self.adjacency_table_mutable().get(node).is_some() {
+            return false;
+        }
+        self.adjacency_table_mutable().insert(String::from(node), Vec::new());
+        true
+
     }
-    fn add_edge(&mut self, edge: (&str, &str, i32)) {
-        //TODO
-    }
+    fn add_edge(&mut self, edge: (&str, &str, i32)) ;
     fn contains(&self, node: &str) -> bool {
         self.adjacency_table().get(node).is_some()
     }
