@@ -69,15 +69,54 @@ impl<T> LinkedList<T> {
             },
         }
     }
-	pub fn merge(list_a:LinkedList<T>,list_b:LinkedList<T>) -> Self
-	{
-		//TODO
-		Self {
-            length: 0,
-            start: None,
-            end: None,
+	// pub fn merge(list_a:LinkedList<T>,list_b:LinkedList<T>) -> Self
+	// {
+	// 	//TODO
+	// 	Self {
+    //         length: 0,
+    //         start: None,
+    //         end: None,
+    //     }
+	// }
+}
+
+impl<T: PartialOrd+Clone> LinkedList<T> {
+    pub fn merge(mut list_a: LinkedList<T>, mut list_b: LinkedList<T>) -> Self {
+        let mut result = LinkedList::new(); // 新的链表用于存储合并结果
+
+        let mut ptr_a = list_a.start;
+        let mut ptr_b = list_b.start;
+
+        while let (Some(mut node_a), Some(mut node_b)) = (ptr_a, ptr_b) {
+            unsafe {
+                if (*node_a.as_ptr()).val <= (*node_b.as_ptr()).val {
+                    // 如果 list_a 的当前节点值小于等于 list_b 的当前节点值
+                    result.add((*node_a.as_ptr()).val.clone());
+                    ptr_a = (*node_a.as_ptr()).next; // 移动 list_a 的指针到下一个节点
+                } else {
+                    result.add((*node_b.as_ptr()).val.clone());
+                    ptr_b = (*node_b.as_ptr()).next; // 移动 list_b 的指针到下一个节点
+                }
+            }
         }
-	}
+
+        // 处理 list_a 或 list_b 剩余的节点
+        while let Some(mut node_a) = ptr_a {
+            unsafe {
+                result.add((*node_a.as_ptr()).val.clone());
+                ptr_a = (*node_a.as_ptr()).next;
+            }
+        }
+
+        while let Some(mut node_b) = ptr_b {
+            unsafe {
+                result.add((*node_b.as_ptr()).val.clone()); 
+                ptr_b = (*node_b.as_ptr()).next;
+            }
+        }
+
+        result // 返回合并后的链表
+    }
 }
 
 impl<T> Display for LinkedList<T>
